@@ -55,12 +55,6 @@ body * {
     padding: 0 20px;
 }
 
-.description {
-    height: 58px;
-    display: block;
-    overflow: hidden;
-}
-
 h1 {
     color: #2c3e50;
 }

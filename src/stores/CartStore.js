@@ -32,6 +32,14 @@ var CartStore = _.extend({}, EventEmitter.prototype, {
         return _product;
     },
 
+    getId: function(id) {
+        var index = _.indexOf(_.pluck(_product, 'id'), id);
+        if(index  > -1){
+            return _product[index];
+        }
+        return [];
+    },
+
     getTotalItems: function() {
         return Object.keys(_product).length;
     },

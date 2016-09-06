@@ -2,7 +2,9 @@
 import ReactDOM from 'react-dom';
 import ProductActions from '../actions/ProductActions';
 import _ from 'underscore';
+import $ from 'jquery';
 
+var flag = true;
 function checksoldout(product, arraycart) {
     // Store === 0 => sold out
     if(product.inventory === 0)
@@ -37,7 +39,42 @@ var Product = React.createClass({
         event.preventDefault();
         this.props.viewDetail(id);
     },
-   
+    viewMoreDescription: function(des, id) {
+        var showChar = 100;
+        var ellipsestext = "...";
+        var moretext = "Show more";
+        var lesstext = "Show less";
+
+        if(des.length > showChar) {
+            var c = des.substr(0, showChar);
+            var h = des.substr(showChar, des.length - showChar);
+            return (
+                <div>
+                    <span>{c}</span>
+                    <span id={"ellipsestext"+id} className="moreellipses">{ellipsestext}</span>
+                    <span className="morecontent">
+                        <span id={id}>{h}</span>
+                        <a id={"morelink"+id} onClick={this.showMore.bind(this, id)} href="#" className="morelink">{moretext}</a>
+                    </span>
+                </div>
+            );
+        }
+    },
+
+    showMore: function(id, event) {
+        $("#" + id).toggle();
+        if(flag){
+            $("#ellipsestext"+id).hide();
+            $("#morelink"+id).html("Show less");
+            flag = false;
+        } else{
+            $("#ellipsestext"+id).show();
+            $("#morelink"+id).html("Show more");
+            flag = true;
+        }
+        return false;
+    },
+
     render: function() {
         return (
             <div>
@@ -47,7 +84,7 @@ var Product = React.createClass({
                             <a href="#" onClick={this.viewDetailClick.bind(this, pro.id)}><img src={'img/' + pro.image}/></a>
                             <div className="flux-product-detail">
                                 <h1 className="name">{pro.name}</h1>
-                                <p className="description">{pro.description}</p>
+                                <div className="description">{this.viewMoreDescription(pro.description, pro.id)}</div>
                                 <p className="price">Price: <b>${pro.price}</b></p>
                                 <button type="button" onClick={this.handleClick.bind(this, pro)} disabled={checksoldout(pro, this.props.cartItem)}>
                                     { checksoldout(pro, this.props.cartItem) === false ? 'Buy Product' : 'Sold Out' }

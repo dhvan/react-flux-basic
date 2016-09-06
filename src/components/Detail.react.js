@@ -1,12 +1,15 @@
 ﻿import React from 'react';
 import ImageGallery from 'react-image-gallery';
 import ProductStore from '../stores/ProductStore';
+import CartStore from '../stores/CartStore';
 
 const Example = React.createClass({
     getInitialState() {
         return { 
             data: [],
-            showModal: true 
+            cart: [],
+            showModal: true, 
+            showMore: false,
         };
     },
 
@@ -18,7 +21,8 @@ const Example = React.createClass({
     componentWillReceiveProps(nextProps) {
         var id = nextProps.modalDetailId;
         var pro = ProductStore.getId(id);
-        this.setState({ data: pro, showModal: nextProps.showModal });
+        var cart = CartStore.getId(id);
+        this.setState({ data: pro, cart: cart, showModal: nextProps.showModal });
     },
 
     handleImageLoad(event) {
@@ -64,13 +68,14 @@ const Example = React.createClass({
                         <button type="button" className="close-cart" onClick={this.close}>X</button>
                     </div>
                     <br />
-                    <div className="flux-product">
+                    <div className="flux-product detail">
                         <img src={this.state.showModal ? '' : ('img/' + this.state.data.image)}/>
                         <div className="flux-product-detail">
                             <h1 className="name">{this.state.data.name}</h1>
                             <p className="description">{this.state.data.description}</p>
                             <p className="price">Price: <b>${this.state.data.price}</b></p>
-                            <p className="price">Inventory: <b>{this.state.data.inventory}</b></p>
+                            <p className="price">Store: <b>{this.state.data.inventory}</b></p>
+                            <p className="price">Cart: <b>{this.state.cart.quantity ? this.state.cart.quantity : 0}</b></p>
                             <br />
                         </div>
                     </div>  
